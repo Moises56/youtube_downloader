@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Downloader - Descarga Videos y Audio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fab fa-youtube"></i>
+                <h1>YouTube Downloader</h1>
+            </div>
+            <p class="subtitle">Descarga videos y audio de YouTube de forma rápida, sencilla y segura</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- URL Input Section -->
+            <section class="url-section">
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <i class="fas fa-link input-icon"></i>
+                        <input 
+                            type="url" 
+                            id="urlInput" 
+                            placeholder="Pega aquí la URL de YouTube (video o playlist)" 
+                            class="url-input"
+                        >
+                        <button id="analyzeBtn" class="analyze-btn">
+                            <i class="fas fa-search"></i>
+                            Analizar
+                        </button>
+                    </div>
+                    <div class="url-validation" id="urlValidation"></div>
+                </div>
+            </section>
+
+            <!-- Video Info Section -->
+            <section class="video-info" id="videoInfo" style="display: none;">
+                <div class="info-card">
+                    <div class="video-thumbnail">
+                        <img id="videoThumbnail" src="" alt="Video thumbnail">
+                        <div class="duration-badge" id="videoDuration"></div>
+                    </div>
+                    <div class="video-details">
+                        <h3 id="videoTitle"></h3>
+                        <p class="video-channel" id="videoChannel"></p>
+                        <div class="video-stats">
+                            <span class="stat">
+                                <i class="fas fa-eye"></i>
+                                <span id="videoViews"></span>
+                            </span>
+                            <span class="stat">
+                                <i class="fas fa-calendar"></i>
+                                <span id="videoDate"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Download Options -->
+            <section class="download-options" id="downloadOptions" style="display: none;">
+                <div class="options-header">
+                    <h3>Opciones de Descarga</h3>
+                    <div class="format-toggle">
+                        <button class="format-btn active" data-format="audio">
+                            <i class="fas fa-music"></i>
+                            Audio (MP3)
+                        </button>
+                        <button class="format-btn" data-format="video">
+                            <i class="fas fa-video"></i>
+                            Video (MP4)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Audio Options -->
+                <div class="format-options audio-options active" id="audioOptions">
+                    <div class="quality-selector">
+                        <label>Calidad de Audio:</label>
+                        <select id="audioQuality">
+                            <option value="best">Mejor calidad disponible</option>
+                            <option value="320">320 kbps</option>
+                            <option value="256">256 kbps</option>
+                            <option value="192">192 kbps</option>
+                            <option value="128">128 kbps</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Video Options -->
+                <div class="format-options video-options" id="videoOptions">
+                    <div class="quality-selector">
+                        <label>Calidad de Video:</label>
+                        <select id="videoQuality">
+                            <option value="best">Mejor calidad disponible</option>
+                            <option value="1080p">1080p (Full HD)</option>
+                            <option value="720p">720p (HD)</option>
+                            <option value="480p">480p</option>
+                            <option value="360p">360p</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Playlist Options -->
+                <div class="playlist-options" id="playlistOptions" style="display: none;">
+                    <div class="playlist-info">
+                        <h4>Playlist detectada</h4>
+                        <p id="playlistDescription"></p>
+                    </div>
+                    <div class="playlist-choice">
+                        <label class="radio-option">
+                            <input type="radio" name="playlistChoice" value="single" checked>
+                            <span class="radio-custom"></span>
+                            Descargar solo este video
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="playlistChoice" value="all">
+                            <span class="radio-custom"></span>
+                            Descargar toda la playlist
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Download Path Selection -->
+                <div class="download-path-section">
+                    <div class="path-selector">
+                        <label for="downloadPath">📁 Carpeta de Descarga (opcional):</label>
+                        <div class="path-input-container">
+                            <input type="text" id="downloadPath" class="path-input" placeholder="Selecciona una carpeta o deja vacío para usar la predeterminada" readonly>
+                            <button type="button" id="selectPathBtn" class="select-path-btn">📂 Seleccionar Carpeta</button>
+                        </div>
+                        <div class="path-info">
+                            <small>💡 Haz clic en "Seleccionar Carpeta" para abrir el explorador de archivos y elegir dónde guardar las descargas. Si tu navegador no soporta la selección automática, podrás ingresar la ruta manualmente.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Button -->
+                <button id="downloadBtn" class="download-btn">
+                    <i class="fas fa-download"></i>
+                    Iniciar Descarga
+                </button>
+            </section>
+
+            <!-- Progress Section -->
+            <section class="progress-section" id="progressSection" style="display: none;">
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <h3>Descargando...</h3>
+                        <button id="cancelBtn" class="cancel-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="progress-info">
+                        <div class="progress-item">
+                            <span class="progress-label">Estado:</span>
+                            <span id="status-text" class="progress-value">Iniciando...</span>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-label">Progreso:</span>
+                            <span id="progress-text" class="progress-value">0%</span>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-label">Velocidad:</span>
+                            <span id="speed-text" class="progress-value">--</span>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-label">Tiempo restante:</span>
+                            <span id="eta-text" class="progress-value">--</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="download-stats">
+                        <span class="stat">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span id="downloadSpeed">-- KB/s</span>
+                        </span>
+                        <span class="stat">
+                            <i class="fas fa-clock"></i>
+                            <span id="timeRemaining">--:--</span>
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Success Section -->
+            <section class="success-section" id="successSection" style="display: none;">
+                <div class="success-card">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>¡Descarga Completada!</h3>
+                    <p id="successMessage">Tu archivo se ha descargado correctamente.</p>
+                    <div class="success-actions">
+                        <button id="downloadAnotherBtn" class="secondary-btn">
+                            <i class="fas fa-plus"></i>
+                            Descargar Otro
+                        </button>
+                        <button id="openFolderBtn" class="primary-btn">
+                            <i class="fas fa-folder-open"></i>
+                            Abrir Carpeta
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 YouTube Downloader. Hecho con <i class="fas fa-heart"></i> para la comunidad.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Términos de Uso</a>
+                <a href="#" class="footer-link">Privacidad</a>
+                <a href="#" class="footer-link">Soporte</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Procesando...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
