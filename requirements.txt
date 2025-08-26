@@ -1,20 +1,16 @@
-# Dependencias para YouTube Downloader
-# Instalar con: pip install -r requirements.txt
+# Dependencias para YouTube Downloader Web Interface
 
-# Librería principal para descargar videos de YouTube
-pytube>=15.0.0
+# Framework web
+Flask==2.3.3
+Flask-CORS==4.0.0
 
-# Alternativa robusta a pytube
- (recomendada si pytube falla)
-yt-dlp>=2023.1.6
+# YouTube downloader
+yt-dlp==2023.10.13
 
-# Para verificación de conectividad
-requests>=2.25.0
+# Utilidades
+requests==2.31.0
+Werkzeug==2.3.7
 
-# Dependencias opcionales para funcionalidades adicionales
-# Descomenta las siguientes líneas si necesitas conversión de audio real
-# pydub>=0.25.1
-# ffmpeg-python>=0.2.0
-
-# Nota: yt-dlp requiere ffmpeg para conversión de audio
-# Descarga ffmpeg desde: https://ffmpeg.org/download.html
+# Para desarrollo (opcional)
+# gunicorn==21.2.0  # Para producción
+# python-dotenv==1.0.0  # Para variables de entorno
